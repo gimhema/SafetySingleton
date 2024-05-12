@@ -2,10 +2,10 @@
 extern crate lazy_static;
 
 mod SafetySingleton;
-use SafetySingleton::*;
+use SafetySingleton::{*, example::test_concurrency};
 
 
 
 fn main() {
-    println!("Hello, world!");
+    test_concurrency();
 }

@@ -3,7 +3,7 @@ use std::thread;
 use std::time::Duration;
 use super::safety_singleton::*;
 
-fn test_concurrency() {
+pub fn test_concurrency() {
 
     let mut handles = vec![];
     for i in 0..5 {
