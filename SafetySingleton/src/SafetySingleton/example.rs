@@ -1,23 +1,24 @@
-use std::sync::{Mutex, Arc};
+use std::sync::{RwLock, Arc};
 use std::thread;
 use std::time::Duration;
-use super::safety_singleton::*;
+use crate::safety_singleton::*; // assuming safety_singleton is in a module called crate
 
 pub fn test_concurrency() {
-
     let mut handles = vec![];
+
     for i in 0..5 {
         let handle = thread::spawn(move || {
             loop {
+                {
+                    let singleton_lock = SafetySingleton::get_instance().read().unwrap();
+                    println!("Thread {}: Data: {}", i, singleton_lock.data);
+                }
 
-                let mut singleton_lock = SafetySingleton::get_instance().lock().unwrap();
-
-
-                println!("Thread {}: Data: {}", i, singleton_lock.data);
-
-
-                singleton_lock.data += 1;
-
+                {
+                    let mut singleton_lock = SafetySingleton::get_instance().write().unwrap();
+                    // singleton_lock.data += 1;
+                    singleton_lock.Update();
+                }
 
                 thread::sleep(Duration::from_secs(1));
             }
@@ -25,7 +26,7 @@ pub fn test_concurrency() {
         handles.push(handle);
     }
 
-    // 모든 스레드의 종료를 기다립니다.
+    // Wait for all threads to finish.
     for handle in handles {
         handle.join().unwrap();
     }

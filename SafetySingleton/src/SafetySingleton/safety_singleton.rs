@@ -12,4 +12,9 @@ impl SafetySingleton {
     pub fn get_instance() -> &'static Arc<RwLock<SafetySingleton>> {
         &INSTANCE
     }
+
+    pub fn Update(&mut self) {
+        println!("Call Update  ! !");
+        self.data += 1;
+    }
 }
